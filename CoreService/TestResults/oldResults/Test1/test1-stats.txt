@@ -1,0 +1,20 @@
+a
+Sys1 Pub - Sys1 Sub
+Number of samples: 722913
+Average subscriber get time: 1.1681225818321153
+--------------------------------------------------------------------
+b
+Sys2 Pub - Sys2 Sub
+Number of samples: 728828
+Average subscriber get time: 2.382011942461047
+--------------------------------------------------------------------
+c
+Sys1 Pub - Sys2 Sub
+Number of samples: 722913
+Average subscriber get time: 4.857245616000819
+--------------------------------------------------------------------
+d
+Sys2 Pub - Sys1 Sub
+Number of samples: 728432
+Average subscriber get time: 5.030716662639752
+--------------------------------------------------------------------

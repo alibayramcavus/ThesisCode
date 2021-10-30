@@ -1,0 +1,20 @@
+docker run -d --rm --name rabbitmq -p 5672:5672 rabbitmq:3.9-management
+-p 15672:15672
+
+-d => detach mode (arka planda)
+-name rabbitmq => container ismini rabbitmq yapıyor
+-p hostPort:containerPort => hosttaki 5672 container daki 5672 ye mapliyor
+
+
+export SERVICE_NAME=service1
+export RABBITMQ_IP=rabbit
+export RABBITMQ_PORT=5672
+export PUBLISHERS_CONF=topic1--1000***topic2--1500
+export SUBSCRIBERS_CONF=topic3
+
+
+export SERVICE_NAME=service2
+export RABBITMQ_IP=rabbit
+export RABBITMQ_PORT=5672
+export PUBLISHERS_CONF=topic3--2000
+export SUBSCRIBERS_CONF=topic1***topic2

@@ -1,0 +1,25 @@
+from Subscriber import Subscriber
+sub = Subscriber('sys1sub1', 'localhost', 9092, 'temp', 'localhost', 5670)
+
+sub = Subscriber('sys1sub2', 'localhost', 9092, 'hum', 'localhost', 5670)
+
+sub = Subscriber('sys2sub1', 'localhost', 9093, 'temp', 'localhost', 5670)
+
+sub = Subscriber('sys2sub2', 'localhost', 9093, 'hum', 'localhost', 5670)
+
+
+sub.startConsuming()
+
+sub.stopConsuming()
+
+
+
+from Publisher import Publiher
+
+pub = Publisher('sys1pub', 'localhost', 9092, 'temp', 10000, 'localhost', 5670)
+
+pub = Publisher('sys2pub', 'localhost', 9093, 'hum', 10000, 'localhost', 5670)
+
+pub.startPublishing()
+
+pub.stopPublishing()

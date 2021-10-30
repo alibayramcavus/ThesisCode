@@ -1,0 +1,26 @@
+A
+Sys1 Pub - Sys1 Sub
+Number of samples: 722913
+Average time between Publisher(Sys1) - Subscriber(Sys1): 1.1681225818321153
+--------------------------------------------------------------------       
+B
+Sys2 Pub - Sys2 Sub
+Number of samples: 728828
+Average time between Publisher(Sys2) - Subscriber(Sys2): 2.382011942461047
+--------------------------------------------------------------------      
+C
+Sys1 Pub - Sys2 Sub
+Number of samples: 722913
+Average time between Publisher(Sys1) - Subscriber(Sys2):       4.857245616000819
+Average time between Publisher(Sys1) - FirstManager(Sys1):     1.2382721018988454
+Average time between FirstManager(Sys1) - SecondManager(Sys2): 1.1256679572784
+Average time between SecondManager(Sys2) - Subscriber(Sys2):   2.4933055568235734
+--------------------------------------------------------------------
+D
+Sys2 Pub - Sys1 Sub
+Number of samples: 728432
+Average time between Publisher(Sys2) - Subscriber(Sys1):       5.030716662639752
+Average time between Publisher(Sys2) - FirstManager(Sys2):     2.4789438135611834
+Average time between FirstManager(Sys2) - SecondManager(Sys1): 1.4402840622048454
+Average time between SecondManager(Sys1) - Subscriber(Sys1):   1.1114887868737233
+--------------------------------------------------------------------

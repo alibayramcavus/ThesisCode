@@ -1,0 +1,79 @@
+version: "3.8"
+
+services:
+  # core_rabbit:
+  #   image: rabbitmq:3.9-management
+  #   networks:
+  #     - core_net
+
+  core:
+    image: core
+    environment: 
+      - CORE_SERVICE_PORT=8080
+      - CORE_BROKER_IP=core_rabbit
+      - CORE_BROKER_PORT=5672
+    ports: 
+      - 8080:8080
+    networks: 
+      - core_net
+
+  sys1-manager:
+    image: manager_rabbit
+    environment: 
+      - SYSTEM_NAME=sys1-manager
+      - MANAGER_IP=sys1-manager
+      - MANAGER_PORT=8080
+      - SYSTEM_BROKER_IP=rabbit_sys1
+      - SYSTEM_BROKER_PORT=5672
+      - CORE_BROKER_IP=rabbit_core
+      - CORE_BROKER_PORT=5672
+      - CORE_SERVICE_IP=core
+      - CORE_SERVICE_PORT=8080
+      - LOG_ENABLED=True
+      - LOG_ONLY_AT_THE_END=True
+      - LOGBROKER_IP=rabbit_log
+      - LOGBROKER_PORT=5672
+    networks: 
+      - sys1_net
+      - core_net
+      - log_net
+    depends_on: 
+      - core
+
+  sys2-manager:
+    image: manager_kafka
+    environment: 
+      - SYSTEM_NAME=sys2-manager
+      - MANAGER_IP=sys2-manager
+      - MANAGER_PORT=8080
+      - SYSTEM_BROKER_IP=kafka
+      - SYSTEM_BROKER_PORT=9092
+      - CORE_BROKER_IP=rabbit_core
+      - CORE_BROKER_PORT=5672
+      - CORE_SERVICE_IP=core
+      - CORE_SERVICE_PORT=8080
+      - LOG_ENABLED=True
+      - LOG_ONLY_AT_THE_END=True
+      - LOGBROKER_IP=rabbit_log
+      - LOGBROKER_PORT=5672
+    networks: 
+      - sys2_net
+      - core_net
+      - log_net
+    depends_on: 
+      - core
+
+
+networks:
+  sys1_net:
+    external:
+      name: sys1_net
+  sys2_net:
+    external:
+      name: sys2_net
+  core_net:
+    external:
+      name: core_net
+  log_net:
+    external: 
+      name: log_net

@@ -1,0 +1,61 @@
+version: "3.8"
+
+services:
+
+  sys2-pub1:
+    image: service_kafka
+    environment: 
+      - SERVICE_NAME=sys2-pub1
+      - KAFKA_IP=kafka
+      - KAFKA_PORT=9092
+      - PUBLISHERS_CONF=humidity--1
+      - LOG_ENABLED=True
+      - LOG_ONLY_AT_THE_END=True
+      - LOGBROKER_IP=rabbit_log
+      - LOGBROKER_PORT=5672
+    networks: 
+      - sys2_net
+      - log_net
+    depends_on: 
+      - sys2-sub1
+      - sys2-sub2
+
+
+  sys2-sub1:
+    image: service_kafka
+    environment: 
+      - SERVICE_NAME=sys2-sub1
+      - KAFKA_IP=kafka
+      - KAFKA_PORT=9092
+      - SUBSCRIBERS_CONF=humidity
+      - LOG_ENABLED=True
+      - LOG_ONLY_AT_THE_END=True
+      - LOGBROKER_IP=rabbit_log
+      - LOGBROKER_PORT=5672
+    networks: 
+      - sys2_net
+      - log_net
+
+  sys2-sub2:
+    image: service_kafka
+    environment: 
+      - SERVICE_NAME=sys2-sub2
+      - KAFKA_IP=kafka
+      - KAFKA_PORT=9092
+      - SUBSCRIBERS_CONF=sys1_temp
+      - LOG_ENABLED=True
+      - LOG_ONLY_AT_THE_END=True
+      - LOGBROKER_IP=rabbit_log
+      - LOGBROKER_PORT=5672
+    networks: 
+      - sys2_net
+      - log_net
+
+networks: 
+  sys2_net:
+    external: true
+    name: sys2_net
+  log_net:
+    external: true
+    name: log_net
+  

@@ -1,0 +1,55 @@
+Our solution for interoperability among different systems using different middleware technologies for their publish and subscribe operations consists of mainly three parts, which are :
+	- CoreService
+	- System Managers
+	- Middleware, specifically RabbitMQ
+
+We will elaborate on each of these parts using an example setup of the interoperability tool with two system illustrated in the following figures, figure[coreWithSystems.png] shows the interoperability tool architecture with two 
+other systems, figure[coreSeqeunce.png] shows the sequence diagram of the overall. In figure[coreWithSystems.png], there are two different systems namely System 1 and System 2. In System 1, developers choose to use RabbitMQ as 
+their middleware, and there are two other services, one of services is publsihing messages to the topic named as topicX, and the other service is subscribed to topicX in the middleware, so it gets the published messages to the 
+topic. In System2, developers choose to use Kafka as their middleware and there is only one service, which is subscribed to a topic named as outsideTopicX, so it gets messages published to this topic. Our purpose here is to get 
+messages published to topicX in System 1 and publish the messages to the outsideTopicX in System 2, so that the service in System 2 can get new messages generated at the System 1.
+
+[figure - coreWithSystems.png]
+[figure - coreSeqeunce.png]
+
+
+3.1) CoreService
+-------------------
+There will be only one instance of CoreService application for the whole systems. The main responsinility of the CoreService is orchestrating the System Managers.
+CoreService serves a Rest API through which users of the interoperability tool can configure the which topics in which systems should be forwarded to which topics of which systems. There are three endpoints in the API, which are:
+
+	- /registerManager: The POST request accepted in this endpoint should have a request body which contains systemName, managerIP, managerPort, systemBrokerIP, systemBrokerPort parameters in json format. The core service holds a 
+	map which has system names as key, and other system parameters as value, so CoreService do not accept two managers with the same name. managerIP and managerPort is used to send request to the system manager, systemBrokerIP and
+	systemBrokerPort is used to make sure there is no more than one system manager connecting to the same middleware. This endpoint return true if system manager can be added to the CoreService, if not returns false.
+	
+	- /publishToCoreBroker: The POST request accepted in this endpoint should have a request body which contains systemName, systemBrokerTopic, coreBrokerTopic parameters in json format. With systemName parameter, CoreService 
+	decide which systemManager is responsible for handling this request, then send a request to corresponding System Manager's /publishToCore endpoint with request body containing systemBrokerTopic, coreBrokerTopic parameters.
+	The System Manager then, subscribes to systemBrokerTopic in the middleware the system uses, and every new message in this topic is published to coreBrokerTopic in the middleware we created for the core. At the end, system 
+	manager gets new messages from topic named as systemBrokerTopic from the system middleware, and published these messages to a topic named as coreBrokerTopic in the middleware we created in the core.
+	
+	- /subscribeToCoreBroker: The POST request accepted in this endpoint should have a request body which contains systemName, coreBrokerTopic, systemBrokerTopic parameters in json format. With systemName parameter, CoreService 
+	decide which systemManager is responsible for handling this request, then send a request to corresponding System Manager's /publishToSystem endpoint with request body containing coreBrokerTopic ,systemBrokerTopic parameters.
+	The System Manager then, subscribes to coreBrokerTopic in the middleware we created for the core, and every new message in this topic is published to systemBrokerTopic in the middleware the system uses. At the end, system 
+	manager gets new messages from topic named as coreBrokerTopic from middleware we created in the core, and published these messages to a topic named as systemBrokerTopic in the the system middleware.
+	
+	
+3.2) System Manager
+-------------------
+The first thing System manager does when it starts to run is sending request to /registerManager endpoint of the CoreService to let it know, it is up and ready to forward messages between core middleware and system middleware.
+The main responsibility of a system manager is to create connection to system middleware and core middleware and store a mapping about which topic corresponds to which toic between these two middleware, and forward messages 
+between them. It serves a Rest API through which CoreService can configure it. There are two endpoints in the API, which are:
+	- /publishToCore: The POST request accepted in this endpoint should have a request body which contains sysyemBrokerTopic, coreBrokerTopic parameters in json format. The System Manager subscribes to topic given in the 
+	systemBrokerTopic parameter in the system middleware and publishes the new messages to the topic given in the coreBrokerTopic parameter in the core middleware.
+	
+	- /publishToSystem: The POST request accepted in this endpoint should have a request body which contains coreBrokerTopic, sysyemBrokerTopic parameters in json format. The System Manager subscribes to topic given in the 
+	coreBrokerTopic parameter in the core middleware and publishes the new messages to the topic given in the systemBrokerTopic parameter in the system middleware.
+	
+	
+3.3) Middleware
+-------------------
+The forwarding of messages among different systems is a very diffucult task to handle, since it is not known in advance messages in which topics in which system middlewares will be sent to which topics in which system middlewares.
+This mapping has not to be one-to-one. For example, we can map topic1 in system1 to topicA in system2 and also topic1 in system1 to topicX in system3. In short, our interoperability tool should be like a middleware in itself, which 
+lets multiple publishers and subscribers for a topic. That is why we decided it is best to use a off-the-shelf application to handle these tasks for us, and we choose to use RabbitMQ as our middleware. It handles all the hard job 
+for us. Let's look at the previous example, topic1 in system1 -> topicA in system2 and topic1 in system1 -> topicX in system3. In this case, system1's system manager just publishes messages of topic1 to a topic whose name is given 
+by the user of the tool in the core middleware, let's named it as coreTopic1 for now. After that, system2's system manager subscribes coreTopic1 in core middleware and publishes messages to topicA in system2 middleware. And 
+system3's system manager subscribes coreTopic1 in core middleware and publishes messages to topicX in system3 middleware.

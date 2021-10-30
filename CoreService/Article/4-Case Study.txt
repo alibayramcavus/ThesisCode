@@ -1,0 +1,16 @@
+Interoperability tool was a need for a project in Aselsan.
+
+It was needed in a physical security project. This project initialy begin with two operator software solution, each operator software was responsible for different set of sensors. However, after some time, customers wanted to 
+see some sensors in both operator softwares. These operator softwares are Mirsad and İhtar. At the begining, Radar sensor is planned to be shown in İhtar, and mini-uav sensor is planned to be shown in Mirsad. However, at some 
+point, customers wanted to see Radar and mini-uav related data in both operator software.
+
+Both system uses middlewares as their communication ways, but they use different middleware solutions. Mirsad is based on RabbitMQ, and İhtar is based on Kafka. So we needed a way to forward radar messages from 
+kafka to rabbitmq and similarly a way to forward mini-uav messages from rabbitmq to kafka, so that each operator software can get wanted data in their middleware. We do not want to make changes in both system for this request 
+because in the future there could be other sensors wanted to be seen in both operator software, so we needed a way of forwarding messages between these middlewares without changing their related parts. That is why we made 
+our solution configurable so that it can forward any wanted messages between any middlewares.
+
+
+----------------------------------------------------------------------------------------------------
+
+A campus of a company containing couple of buildings is using couple of different access control system depending on the security level of the building. Each building has a security employee responsible for tracking the access control system. However for some buildings, they want security employee to track couple of buildings while locating in its original building. For example, security employee on Building A is going to track both Building A and 
+Building B, and security employee on Building B is going to track both Building B and Building A. However, Building A and Building B is using different access control systems, so we have to forward each systems messages to each other. In our case access control system in Building A is using RabbitMQ to publish new records of any activity, and access control system in Building B is using Kafka to publish new records of any activity. So we need to forward messages published in some topics in both middlewares to each other. However there are different access control systems using different middleware solutions, and in the future there could be other systems to integrate together. That is why we needed a solution that is extensible to other middleware solutions, and configurable about which messages in which topics in which middleware should be forwarded to which topics in which middleware.

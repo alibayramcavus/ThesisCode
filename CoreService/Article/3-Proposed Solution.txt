@@ -1,0 +1,29 @@
+The proposed solution to interoperability among different systems using different middlewares consists of mainly three parts: CoreService, System managers, RabbitMQ.
+
+There is one CoreService instance whose main responsibility is orchestrating the system managers. It serves a Restful api throgh which system managers let it know there is system manager who is connected to a middleware 
+which is used in a system. There are three endpoints, which are:
+* /registerManager: which waits to get requests from system managers when they start to run. The requested parameters are,
+	- systemName: CoreService uses systemName as a key for each system manager, so each system manager has to use different system name. SystemName is an essential part to identify which system is specified in the other endpoints.
+	- managerIP, managerPort: CoreService uses the Restful api exposed by the system managers, that is why it needs to know the ip of the sysme manager.
+	- systemBrokerIP, systemBrokerPort: This paramater states that system manager sending the request is using the system broker given in these paramaters. CoreService requires these parameters to not let more than one system 
+					manager connect the same system, which may cause complexity.
+
+The main responsibility of the system manager is to create a connection to its corresponding system middleware and core middleware, and store a mapping between topics in system middleware and core middleware. The first thing it 
+does when starting to run is letting CoreService know that it is up and connected to system middleware at certain IP and port. Then it serves a Restful api to let the CoreService send commands. It serves two endpoints, which are 
+publishToCore and publishToSystem. 
+* When a request to publishToCore endpoint is received with right parameters, the system manager subscribes to topic given in the paramater in the system middleware, and publishes the new messages 
+to the topics given in the parameters in the core middleware, see figure X. 
+* When a request to publishToSystem endpoint is received with right paramaters, the system manager subscribes to topic given in the paramater in core 
+middleware, and publishes the new messages to the topics given in the parameters in the system middleware, see figure Y.
+
+
+System Middleware <--(sub to given topic)--- System Manager ---publish to given topic--> Core Middleware
+[figure X]
+
+
+Core Middleware <--(sub to given topic)--- System Manager ---publish to given topic--> System Middleware
+[figure Y]
+
+
+Other than these two different services, we decided it is best to use a middleware in our solution. Since we are mapping topics from systems to core to subscribe and publish messages, the handling of these topics, new messages, and 
+possibly lots of connections from various system managers is a very difficult job, and this is already handled by various middleware solutions, so we just use RabbitMQ as our core middleware to handle all of these jobs for us.

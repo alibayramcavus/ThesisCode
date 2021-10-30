@@ -1,0 +1,39 @@
+A
+Sys1 Pub - Sys1 Sub
+Number of samples: 1343898
+Average time between Publisher(Sys1) - Subscriber(Sys1): 1.9762913554451305
+--------------------------------------------------------------------       
+B
+Sys2 Pub - Sys2 Sub
+Number of samples: 1318931
+Average time between Publisher(Sys2) - Subscriber(Sys2): 6.416021004889566
+--------------------------------------------------------------------
+C
+Sys1 Pub - Sys2 Sub
+Number of samples: 1343898
+Average time between Publisher(Sys1) - Subscriber(Sys2):       14.146144275830457
+Average time between Publisher(Sys1) - FirstManager(Sys1):     2.382980702404498
+Average time between FirstManager(Sys1) - SecondManager(Sys2): 4.043324716607957
+Average time between SecondManager(Sys2) - Subscriber(Sys2):   7.7198388568180025
+--------------------------------------------------------------------
+D
+Sys2 Pub - Sys1 Sub
+Number of samples: 1318931
+Average time between Publisher(Sys2) - Subscriber(Sys1):       28.4333297192954
+Average time between Publisher(Sys2) - FirstManager(Sys2):     21.043940888492273
+Average time between FirstManager(Sys2) - SecondManager(Sys1): 4.848910974114643
+Average time between SecondManager(Sys1) - Subscriber(Sys1):   2.5404778566884847
+--------------------------------------------------------------------
+
+select count(*) from logstable;
+-- 5325658
+
+select * from logstable order by publishtime desc limit 1;
+-- 1631702719687
+
+select * from logstable order by publishtime asc limit 1;
+-- 1631699124092
+
+-- 1631702719687 - 1631699124092 = 3,595,595 -> 0.9987763888888889 hour
+
+(5325658 / 3595) / 4 = 370.35

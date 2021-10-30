@@ -1,0 +1,46 @@
+version: "3.8"
+
+services:
+  # rabbit_log:
+  #   image: rabbitmq:3.9-management
+  #   networks:
+  #     - log_net
+
+  masterdb:
+    image: postgres:13.4-alpine3.14
+    volumes: 
+      - db_data:/var/lib/postgresql/data
+    environment: 
+      - POSTGRES_PASSWORD=masterdbpassword
+    ports: 
+      - 5000:5432
+    # depends_on: 
+    #   - rabbit_log
+    networks: 
+      - log_net
+
+  logger:
+    image: newlogger
+    environment: 
+      - DB_IP=masterdb
+      - DB_PORT=5432
+      - DB_NAME=logDB
+      - DB_PASSWORD=masterdbpassword
+      - BROKER_IP=rabbit_log
+      - BROKER_PORT=5672
+    restart: always
+    depends_on: 
+      # - rabbit_log
+      - masterdb
+    networks: 
+      - log_net
+
+networks:
+  log_net:
+    external:
+      name: log_net
+
+volumes: 
+  db_data:
+    external: true
+    name: db_data

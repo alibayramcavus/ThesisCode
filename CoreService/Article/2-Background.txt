@@ -1,0 +1,29 @@
+In this section, we present related works. There are not lots of work done related to interoperability of different systems based on different middleware or message brokers. 
+However, there some works done for the interoperability problem on different domains. In [1] authors stated that increasing number and diversity of the devices used in the IoT domain 
+arises the problem of interoperability, where IoT should be able to connect all devices through various data protocols. They propose a middleware capable of supporting 
+interoperability by providing a multi-protocol gateway between COAP, MQTT, and WebSocket.They developed a system in which two different sensor exposes its data using different 
+communication protocols, one using COAP and other using MQTT. Their proposed system is getting data from these two sensors with COAP and MQTT and publishing these data to a web 
+application which uses WebSocket as communication protocol. Their proposed middleware solution is responsible for handling all of these communication protocols to get sensor data and 
+give data to web application. The results of this system for data transmission, either from sensors or MQTT COAP has a success rate above 90%, the average delivery of data from 
+sensors COAP and MQTT below 1 second, for packet loss rate varied between 0%-25%. 
+
+In [2]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1]
+An Event-based Middleware for Syntactical Interoperability in Internet of Things
+
+[2]
+Interoperability By Means Of Configurable Connectors

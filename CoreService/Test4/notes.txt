@@ -1,0 +1,9 @@
+1 - One publisher at each system
+2 - Each publisher publishes around 500 messages per second (1 message - 2 ms)
+3 - Two subscribers at each system
+4 - One subscriber for the topic which is published inside the system
+5 - One subscriber for the topic which is published from outside the system
+
+Note: 
+Run below command in DB backup
+		select * from logstable order by subscribertime desc limit 1000;

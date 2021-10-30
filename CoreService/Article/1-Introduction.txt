@@ -1,0 +1,32 @@
+Software development is constantly evolving, nowaday's microservice architecture and event driven architecture are two of the most popular ways of developing software solutions.
+Generally these two concepts are used together, so software development is all about creating event driven microservice architecture. Microservice architecture is proven to deliver 
+software solutions that are more scalable, independent and easier to maintain. Event driven architecture is promising true decoupling of event producer and event consumer services, and
+resiliency of the eventing systems[1].
+
+Different solutions exist to accomplish the distributed nature of the event driven microservices architecture, including publish/subscribe systems. Apache Kafka [REF] and RabbitMq 
+[REF] are common examples of them both having certain advantages based on the use case. For example, while Kafka is advantageous in stream processing, RabbitMq is preferable to be 
+used with legacy protocols [REF]. 
+
+Having various subsystems based on different communication technologies into a bigger system or interactions among multiple systems are usual in real-world problems [REF].  
+Gateways are one of the solutions that provide interoperability for heterogeneous systems [REF]. This work proposes a gateway system to achieve interoperability for heterogeneous 
+microservices systems that use different publish/subscribe technologies by providing two-way communication among them. The gateway system itself has a publish/subscribe microservice 
+technology allowing interoperability among more than two systems or subsystems. For the sake of simplicity, the gateway has experimented with two different systems; one of them 
+is Kafka-based, the other one is RabbitMq-based. 
+
+We have conducted 5 different test with different load on the message brokers. The results show the applicability of the proposed gateway system.
+
+The rest of this study is structured as follows: necessary background information and related work are provided in the next section. Then, the proposed gateway application is 
+explained in detail and conducted experiments are explained. After a discussion section that includes the author's observations and comments the work is concluded.  
+
+
+
+
+
+
+
+
+
+
+
+[1]
+https://developer.ibm.com/articles/advantages-of-an-event-driven-architecture/

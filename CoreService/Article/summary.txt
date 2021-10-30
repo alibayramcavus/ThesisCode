@@ -1,0 +1,21 @@
+We have tested our solution 5 times with increaising number of published messages per second from both Building A's and Building B's publishers. The number of messages forwarded in our solution is the double of messages published from one of the publishers, since it forwards both way in this example.
+	
+	
+	
+	
+	
+Number of message per second from each publisher				40		100		200		500		1000
+Building A's Publisher -> Building A's Subscriber			:	1.42	1.30	1.10	1.98	2.88
+Building A's Publisher -> Building A's Converter			:	1.38	1.39	1.16	2.38	4.24
+Building A's Converter -> Building B's Converter			:	1.86	1.35	1.23	4.04	6.04
+Building B's Converter -> Building B's Subscriber			:	2.94	2.19	2.25	7.72	8.11
+Building A's Publisher -> Building B's Subscriber(in total)	:	6.18	4.93	4.64	14.14	18.39
+
+Building B's Publisher -> Building B's Subscriber			:	2.70	2.31	2.14	6.42	6.64
+Building B's Publisher -> Building B's Converter			:	2.98	2.36	2.63	21.04	22.95
+Building B's Converter -> Building A's Converter			:	2.24	1.47	1.48	4.85	6.06
+Building A's Converter -> Building A's Subscriber			:	1.18	1.17	1.00	2.54	3.86
+Building B's Publisher -> Building A's Subscriber(in total)	:	6.40	5.00	5.11	28.43	32.87
+
+
+From table 1, we can see that our solution is able to handle thousands of message forwading under 1 second. The delay between Building B's Publisher and Building B's Converter, and between Building B's Converter and Building B's Subscriber for the fifth test is very big compared to fourth test. We can state that the Building B's Converter may slow down forwarding of messages when the load on the system is bigger. The implementation of Building B's Converter is very similar to Building A's Converter other than Building B's underlying broker is Kafka and Building A's underlying broker is RabbitMQ. As we are not Kafka professionals, our implementation for publishing and subscring to Kafka may be not the most efficient way of doing so. Also Building B's Kafka Cluster only contains one Kafka Broker, that may be one of the other reason why Building B's Converter seem to be slow for our last test.

@@ -1,0 +1,64 @@
+version: "3.8"
+
+services:
+  # sys1 rabbit
+  rabbit_sys1:
+    image: rabbitmq:3.9-management
+    networks:
+      - sys1_net
+
+  # sys2 zookeeper
+  zookeeper:
+    image: 'bitnami/zookeeper:latest'
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    networks: 
+      - sys2_net
+
+  # sys2 kafka
+  kafka:
+    # https://hub.docker.com/r/bitnami/kafka/#full-configuration
+    # Accessing Kafka with internal and external clients
+    image: 'bitnami/kafka:latest'
+    ports:
+      - 5682:5682
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=CLIENT://:9092,EXTERNAL://:5690
+      - KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://kafka:9092,EXTERNAL://localhost:5690
+      - KAFKA_INTER_BROKER_LISTENER_NAME=CLIENT
+    networks: 
+      - sys2_net
+    depends_on:
+      - zookeeper
+
+
+  # core rabbit
+  rabbit_core:
+    image: rabbitmq:3.9-management
+    networks:
+      - core_net
+
+  # log rabbit
+  rabbit_log:
+    image: rabbitmq:3.9-management
+    networks:
+      - log_net
+    
+
+networks:
+  sys1_net:
+    external:
+      name: sys1_net
+  sys2_net:
+    external:
+      name: sys2_net
+  core_net:
+    external:
+      name: core_net
+  log_net:
+    external: 
+      name: log_net

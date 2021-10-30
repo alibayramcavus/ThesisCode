@@ -1,0 +1,39 @@
+version: "3.8"
+
+services:
+
+  core:
+    image: core
+    environment: 
+      - 
+
+  manager_rabbit:
+    image: manager_rabbit
+    environment: 
+      - SYSTEM_NAME=sys1
+      - MANAGER_IP=manager_rabbit
+      - MANAGER_PORT=8080
+      - SYSTEM_BROKER_IP=rabbit_sys1
+      - SYSTEM_BROKER_PORT=5672
+      - CORE_BROKER_IP=rabbit_core
+      - CORE_BROKER_PORT=5672
+      - CORE_SERVICE_IP=core
+      - CORE_SERVICE_PORT=8080
+      - LOG_ENABLED=True
+      - LOGBROKER_IP=rabbit_log
+      - LOGBROKER_PORT=5672
+    
+
+networks:
+  sys1_net:
+    external:
+      name: sys1_net
+  sys2_net:
+    external:
+      name: sys2_net
+  core_net:
+    external:
+      name: core_net
+  log_net:
+    external: 
+      name: log_net

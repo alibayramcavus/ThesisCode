@@ -1,0 +1,73 @@
+version: "3.8"
+
+services:
+  # rabbit:
+  #   image: rabbitmq:3.9-management
+  #   networks:
+  #     - sys1_net
+    
+  sys1-pub1:
+    image: service_rabbit
+    environment: 
+      - SERVICE_NAME=sys1-pub1
+      - RABBITMQ_IP=rabbit_sys1
+      - RABBITMQ_PORT=5672
+      - PUBLISHERS_CONF=temp--2500
+      - LOG_ENABLED=True
+      - LOG_ONLY_AT_THE_END=True
+      - LOGBROKER_IP=rabbit_log
+      - LOGBROKER_PORT=5672
+    restart: always
+    networks: 
+      - sys1_net
+      - log_net
+    # depends_on: 
+    #   - rabbit
+    depends_on: 
+      - sys1-sub1
+      - sys1-sub2
+
+
+  sys1-sub1:
+    image: service_rabbit
+    environment: 
+      - SERVICE_NAME=sys1-sub1
+      - RABBITMQ_IP=rabbit_sys1
+      - RABBITMQ_PORT=5672
+      - SUBSCRIBERS_CONF=temp
+      - LOG_ENABLED=True
+      - LOG_ONLY_AT_THE_END=True
+      - LOGBROKER_IP=rabbit_log
+      - LOGBROKER_PORT=5672
+    restart: always
+    networks: 
+      - sys1_net
+      - log_net
+    # depends_on: 
+    #   - rabbit
+
+  sys1-sub2:
+    image: service_rabbit
+    environment: 
+      - SERVICE_NAME=sys1-sub2
+      - RABBITMQ_IP=rabbit_sys1
+      - RABBITMQ_PORT=5672
+      - SUBSCRIBERS_CONF=sys2_humidity
+      - LOG_ENABLED=True
+      - LOG_ONLY_AT_THE_END=True
+      - LOGBROKER_IP=rabbit_log
+      - LOGBROKER_PORT=5672
+    restart: always
+    networks: 
+      - sys1_net
+      - log_net
+    # depends_on: 
+    #   - rabbit
+
+networks:
+  sys1_net:
+    external:
+      name: sys1_net
+  log_net:
+    external: 
+      name: log_net

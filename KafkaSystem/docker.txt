@@ -1,0 +1,35 @@
+docker-compose up
+
+docker run --network kafka_simulation --name pub1 -it service_kafka sh
+
+pub1
+export SERVICE_NAME=pub1
+export KAFKA_IP=kafka
+export KAFKA_PORT=9092
+export PUBLISHERS_CONF=humidity--1500
+
+pub2sub1
+export SERVICE_NAME=pub2sub1
+export KAFKA_IP=kafka
+export KAFKA_PORT=9092
+export PUBLISHERS_CONF=photo--2000
+export SUBSCRIBERS_CONF=humidity
+
+pub3
+export SERVICE_NAME=pub3
+export KAFKA_IP=kafka
+export KAFKA_PORT=9092
+export PUBLISHERS_CONF=temp--1000
+
+sub2
+export SERVICE_NAME=sub2
+export KAFKA_IP=kafka
+export KAFKA_PORT=9092
+export SUBSCRIBERS_CONF=photo
+
+sub3
+export SERVICE_NAME=sub3
+export KAFKA_IP=kafka
+export KAFKA_PORT=9092
+export SUBSCRIBERS_CONF=photo***humidity
+
