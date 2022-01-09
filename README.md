@@ -12,7 +12,7 @@ Then start first system:
   * docker-compose up
 
 Then start second system:  
-  * cd RabbitMQManager
+  * cd KafkaSystem
   * docker-compose up
   
 Then start log system
