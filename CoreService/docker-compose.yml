@@ -8,18 +8,18 @@ services:
 
   core:
     image: core
-    environment: 
+    environment:
       - CORE_SERVICE_PORT=8080
-      - CORE_BROKER_IP=core_rabbit
+      - CORE_BROKER_IP=rabbit_core
       - CORE_BROKER_PORT=5672
-    ports: 
+    ports:
       - 8080:8080
-    networks: 
+    networks:
       - core_net
 
   sys1-manager:
     image: manager_rabbit
-    environment: 
+    environment:
       - SYSTEM_NAME=sys1-manager
       - MANAGER_IP=sys1-manager
       - MANAGER_PORT=8080
@@ -33,16 +33,16 @@ services:
       - LOG_ONLY_AT_THE_END=True
       - LOGBROKER_IP=rabbit_log
       - LOGBROKER_PORT=5672
-    networks: 
+    networks:
       - sys1_net
       - core_net
       - log_net
-    depends_on: 
+    depends_on:
       - core
 
   sys2-manager:
     image: manager_kafka
-    environment: 
+    environment:
       - SYSTEM_NAME=sys2-manager
       - MANAGER_IP=sys2-manager
       - MANAGER_PORT=8080
@@ -56,13 +56,12 @@ services:
       - LOG_ONLY_AT_THE_END=True
       - LOGBROKER_IP=rabbit_log
       - LOGBROKER_PORT=5672
-    networks: 
+    networks:
       - sys2_net
       - core_net
       - log_net
-    depends_on: 
+    depends_on:
       - core
-
 
 networks:
   sys1_net:
@@ -75,5 +74,5 @@ networks:
     external:
       name: core_net
   log_net:
-    external: 
+    external:
       name: log_net
